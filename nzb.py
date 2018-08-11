@@ -9,7 +9,9 @@ class NZB(object):
         self._logger = logging.getLogger()
         try:
             with open("./config.json") as w:
+                self._logger.info("Loading NZB config.json")
                 cfg = json.load(w)
+                self._logger.info("NZB Config loaded successfully" + str(cfg))
                 self._url = cfg['nzbget']['url']
                 self._username = cfg['nzbget']['username']
                 self._password = cfg['nzbget']['password']

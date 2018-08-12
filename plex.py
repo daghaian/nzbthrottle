@@ -33,15 +33,5 @@ class PlexServer(object):
         except Exception as e:
             self._logger.exception("Failed to successfully request current active sessions from Plex")
 
-    def monitor_active_streams(self):
-        while(1):
-            self._logger.info("Requesting active stream count...")
-            active_streams = self.get_active_streams()
-            if(active_streams != None):
-                self._logger.info("Current stream count: %d",int(active_streams))
-            self._logger.info("Sleeping for %d seconds before checking again",self._interval)
-            time.sleep(self._interval)
-
-
 
 

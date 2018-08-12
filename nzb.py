@@ -29,5 +29,7 @@ class NZB(object):
             if(r.status_code == 200):
                 self._logger.info("Response from NZBGet: " + str(r.text))
                 return r.text
+            else:
+                self._logger.error("Did not get expected response from NZB API: %s",r.text)
         except Exception as e:
             self._logger.exception("Issue encountered when attempting to request method run from NZBGet")

@@ -19,6 +19,8 @@ class NZB(object):
         except Exception as e:
             self._logger.exception("Problem encountered when creating NZB object")
             sys.exit(1)
+    def get_speedIncrements(self):
+        return self._speedIncrements
 
     def run_method(self,method,params=None):
         try:

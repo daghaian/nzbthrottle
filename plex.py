@@ -29,6 +29,8 @@ class PlexServer(object):
             if(r.status_code == 200):
                 root = ET.fromstring(r.text)
                 return int(root.attrib['size'])
+            else:
+                self._logger.error("Did not get expected response from Plex API: %s",r.text)
         except Exception as e:
             self._logger.exception("Failed to successfully request current active sessions from Plex")
 

@@ -36,9 +36,22 @@ while(1):
     active_streams = p.get_active_streams()
     if(active_streams != None):
         logger.info("Current stream count: %d",active_streams)
-        if(active_streams > 0):
-            logger.info("There are currently active streams. Proceeding to throttle NZB")
-
+        if (currThrottled):
+            if(active_streams == 0):
+                logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
+                throttleResponse = json.loads(n.run_method("rate",0))
+                if (throttleResponse["result"] == True):
+                    logger.info("Successfully unthrottled NZBGet!")
+                    currThrottled = False
+            else:
+                logger.info("Already throttled, no need to resend request")
+        else:
+            if(active_streams > 0):
+                logger.info("There are currently active streams. Proceeding to throttle NZB")
+                throttleResponse = json.loads(n.run_method("rate",stream_helper.find_nearest(n.get_speedIncrements(),active_streams)))
+                if(throttleResponse["result"] == True):
+                    logger.info("Successfully throttled NZBGet!")
+                    currThrottled = True
     logger.info("Sleeping for %d seconds before checking again",p.get_interval())
     time.sleep(p.get_interval())
 

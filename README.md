@@ -56,7 +56,9 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 
 ```speeds``` - Define speed to throttle to (in kB/s) based on number of active streams
 
+
 ## Usage
 
 ```python throttle.py [-h] [--log-level=['DEBUG','INFO','WARN']]```
 
+If you do not wish to run the script manually, the module can be daemonized by copying the service file and running the script as a service. May need to modify location of script based on your preference.

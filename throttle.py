@@ -1,7 +1,9 @@
 import plex
 import nzb
+import json
 import time
 import logging.handlers
+from helpers import stream_throttle_helpers as stream_helper
 
 #Initialize Logging
 logger = logging.getLogger()
@@ -28,7 +30,7 @@ logger.addHandler(ch)
 
 p = plex.PlexServer()
 n = nzb.NZB()
-
+currThrottled = False
 while(1):
     logger.info("Requesting active stream count...")
     active_streams = p.get_active_streams()

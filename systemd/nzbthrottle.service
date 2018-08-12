@@ -1,0 +1,15 @@
+[Unit]
+Description=nzbthrottle
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+WorkingDirectory=/opt/nzbthrottle/
+ExecStart=/usr/bin/python3 /opt/nzbthrottle/throttle.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

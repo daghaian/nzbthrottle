@@ -21,6 +21,9 @@ class PlexServer(object):
             self._logger.exception("Problem encountered when creating PlexServer object")
             sys.exit(1)
 
+    def get_interval(self):
+        return self._interval
+
     def get_active_streams(self):
         try:
             r = requests.get(self._url + "/status/sessions",headers={'X-Plex-Token':self._token})

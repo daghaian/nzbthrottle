@@ -42,7 +42,7 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 
 ```url``` - URL of your Plex Server
 
-```interval``` - Interval with which to check for active streams (minutes)
+```interval``` - Interval with which to check for active streams (seconds)
 
 ```token``` - Your X-Plex-Token
 

@@ -22,10 +22,10 @@ class NZB(object):
 
     def run_method(self,method,params=None):
         try:
-            self._logger.info("Requesting method: " + str(method) + " with params: " + str(None))
+            self._logger.info("Requesting method: " + str(method) + " with params: " + str(params))
             r = requests.post(self._url + '/{username}:{password}/jsonrpc'.format(username=self._username,password=self._password),headers={'Content-type':'application/json'},json={"method":method,"params": params if not None else []})
             if(r.status_code == 200):
                 self._logger.info("Response from NZBGet: " + str(r.text))
                 return r.text
         except Exception as e:
-            self._logger.error("Issue encountered when attempting to request method run from NZBGet")
+            self._logger.exception("Issue encountered when attempting to request method run from NZBGet")

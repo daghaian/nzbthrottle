@@ -6,6 +6,44 @@ import argparse
 import logging.handlers
 from helpers import stream_throttle_helpers as stream_helper
 
+
+def start_monitor():
+    currThrottled = False
+    while (1):
+        logger.info("Requesting active stream count...")
+        active_streams = p.get_active_streams()
+        if (active_streams != None):
+            logger.info("Current stream count: %d", active_streams)
+            if (currThrottled):
+                if (active_streams == 0):
+                    logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
+                    throttleResponse = json.loads(n.run_method("rate", 0))
+                    if (throttleResponse["result"] == True):
+                        logger.info("Successfully unthrottled NZBGet!")
+                        currThrottled = False
+                else:
+                    logger.info("Already throttled, no need to resend request")
+            else:
+                if (active_streams > 0):
+                    logger.info("There are currently active streams. Proceeding to throttle NZB")
+                    throttleResponse = json.loads(
+                        n.run_method("rate", stream_helper.find_nearest(n.get_speedIncrements(), active_streams)))
+                    if ("result" in throttleResponse and throttleResponse["result"] == True):
+                        logger.info("Successfully throttled NZBGet!")
+                        currThrottled = True
+                    else:
+                        logger.error("Something went wrong when attemping to throttle NZB: %s",throttleResponse)
+        logger.info("Sleeping for %d seconds before checking again", p.get_interval())
+        time.sleep(p.get_interval())
+
+#=======================================================#
+#                       INIT                            #
+#=======================================================#
+
+#Grab command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--log-level',type=str,default='INFO',choices=['INFO','DEBUG','WARN'],help="Level of Logging Desired (Default: INFO)")
+
 #Initialize Logging
 logger = logging.getLogger()
 logger.setLevel(parser.parse_args().log_level)
@@ -31,29 +69,6 @@ logger.addHandler(ch)
 
 p = plex.PlexServer()
 n = nzb.NZB()
-currThrottled = False
-while(1):
-    logger.info("Requesting active stream count...")
-    active_streams = p.get_active_streams()
-    if(active_streams != None):
-        logger.info("Current stream count: %d",active_streams)
-        if (currThrottled):
-            if(active_streams == 0):
-                logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
-                throttleResponse = json.loads(n.run_method("rate",0))
-                if (throttleResponse["result"] == True):
-                    logger.info("Successfully unthrottled NZBGet!")
-                    currThrottled = False
-            else:
-                logger.info("Already throttled, no need to resend request")
-        else:
-            if(active_streams > 0):
-                logger.info("There are currently active streams. Proceeding to throttle NZB")
-                throttleResponse = json.loads(n.run_method("rate",stream_helper.find_nearest(n.get_speedIncrements(),active_streams)))
-                if(throttleResponse["result"] == True):
-                    logger.info("Successfully throttled NZBGet!")
-                    currThrottled = True
-    logger.info("Sleeping for %d seconds before checking again",p.get_interval())
-    time.sleep(p.get_interval())
 
 
+start_monitor()

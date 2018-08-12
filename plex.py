@@ -10,9 +10,9 @@ class PlexServer(object):
         self._logger = logging.getLogger()
         try:
             with open("./config.json") as w:
-                self._logger.info("Loading Plex config.json")
+                self._logger.debug("Loading Plex config.json")
                 cfg = json.load(w)
-                self._logger.info("Plex Config loaded successfully" + str(cfg))
+                self._logger.debug("Plex Config loaded successfully" + str(cfg))
                 self._url = cfg['plex']['url']
                 self._token =  cfg['plex']['token']
                 self._interval =  cfg['plex']['interval']

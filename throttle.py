@@ -2,12 +2,13 @@ import plex
 import nzb
 import json
 import time
+import argparse
 import logging.handlers
 from helpers import stream_throttle_helpers as stream_helper
 
 #Initialize Logging
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(parser.parse_args().log_level)
 
 # create a file handler
 # Max Log Size - 10 MB

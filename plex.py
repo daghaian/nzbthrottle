@@ -3,7 +3,6 @@ import requests
 import json
 import xml.etree.ElementTree as ET
 import logging
-import time
 import sys
 
 class PlexServer(object):
@@ -29,7 +28,7 @@ class PlexServer(object):
             r = requests.get(self._url + "/status/sessions",headers={'X-Plex-Token':self._token})
             if(r.status_code == 200):
                 root = ET.fromstring(r.text)
-                return root.attrib['size']
+                return int(root.attrib['size'])
         except Exception as e:
             self._logger.exception("Failed to successfully request current active sessions from Plex")
 

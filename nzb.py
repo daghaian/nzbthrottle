@@ -2,6 +2,7 @@ import logging
 import requests
 import json
 import sys
+from helpers import stream_throttle_helpers as stream_helper
 
 class NZB(object):
     def __init__(self):
@@ -20,6 +21,15 @@ class NZB(object):
             sys.exit(1)
     def get_speedIncrements(self):
         return self._speedIncrements
+
+    def throttle_streams(self,active_streams):
+        currRate = 0
+        if(active_streams != 0):
+            currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
+        throttleResponse = json.loads(self.run_method("rate",currRate))
+        if (throttleResponse["result"] == True):
+            return True
+        return False
 
     def run_method(self,method,params=None):
         try:

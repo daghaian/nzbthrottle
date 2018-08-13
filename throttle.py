@@ -18,9 +18,7 @@ def start_monitor():
             if (currThrottled):
                 if (active_streams == 0):
                     logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
-                    throttleResponse = json.loads(n.run_method("rate", 0))
-                    if (throttleResponse["result"] == True):
-                        logger.info("Successfully unthrottled NZBGet!")
+                    if(n.throttle_streams(active_streams) == True):
                         currThrottled = False
                         last_active_streams = active_streams
                         logger.info("Throttle lifted successfully")
@@ -34,11 +32,10 @@ def start_monitor():
             else:
                 if (active_streams > 0):
                     logger.info("There are currently active streams. Proceeding to throttle NZB")
-                    throttleResponse = json.loads(
-                        n.run_method("rate", stream_helper.find_nearest(n.get_speedIncrements(), active_streams)))
-                    if ("result" in throttleResponse and throttleResponse["result"] == True):
-                        logger.info("Successfully throttled NZBGet!")
+                    if (n.throttle_streams(active_streams) == True):
+                        logger.info("NZB throttled successfully")
                         currThrottled = True
+                        last_active_streams = active_streams
                     else:
                         logger.error("Something went wrong when attemping to throttle NZB")
         logger.info("Sleeping for %d seconds before checking again", p.get_interval())

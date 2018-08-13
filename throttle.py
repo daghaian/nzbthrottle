@@ -9,6 +9,7 @@ from helpers import stream_throttle_helpers as stream_helper
 
 def start_monitor():
     currThrottled = False
+    last_active_streams = 0
     while (1):
         logger.info("Requesting active stream count...")
         active_streams = p.get_active_streams()
@@ -21,6 +22,13 @@ def start_monitor():
                     if (throttleResponse["result"] == True):
                         logger.info("Successfully unthrottled NZBGet!")
                         currThrottled = False
+                        last_active_streams = active_streams
+                        logger.info("Throttle lifted successfully")
+                elif(active_streams != last_active_streams):
+                    logger.info("Already throttled, but stream count has changed, adjusting speed")
+                    if (n.throttle_streams(active_streams) == True):
+                        last_active_streams = active_streams
+                        logger.info("Speed throttling adjusted successfully")
                 else:
                     logger.info("Already throttled, no need to resend request")
             else:

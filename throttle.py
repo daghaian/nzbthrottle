@@ -30,7 +30,7 @@ def start_monitor():
                         last_active_streams = active_streams
                         logger.info("Speed throttling adjusted successfully")
                 else:
-                    logger.info("Already throttled, no need to resend request")
+                    logger.info("Already throttled with no change. Continuing to monitor.")
             else:
                 if (active_streams > 0):
                     logger.info("There are currently active streams. Proceeding to throttle NZB")
@@ -40,7 +40,7 @@ def start_monitor():
                         logger.info("Successfully throttled NZBGet!")
                         currThrottled = True
                     else:
-                        logger.error("Something went wrong when attemping to throttle NZB: %s",throttleResponse)
+                        logger.error("Something went wrong when attemping to throttle NZB")
         logger.info("Sleeping for %d seconds before checking again", p.get_interval())
         time.sleep(p.get_interval())
 

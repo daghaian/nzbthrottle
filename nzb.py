@@ -27,7 +27,7 @@ class NZB(object):
         if(active_streams != 0):
             currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
         throttleResponse = json.loads(self.run_method("rate",currRate))
-        if (throttleResponse["result"] == True):
+        if ('result' in throttleResponse and throttleResponse["result"] == True):
             return True
         return False
 

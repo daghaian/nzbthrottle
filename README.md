@@ -59,6 +59,21 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 
 ## Usage
 
+### Running script manually ###
 ```python throttle.py [-h] [--log-level=['DEBUG','INFO','WARN']]```
 
-If you do not wish to run the script manually, the module can be daemonized by copying the service file and running the script as a service. May need to modify location of script based on your preference.
+### Running script as service ###
+If you do not wish to run the script manually, the module can be daemonized by copying the service file and running the script as a service. May need to modify location of script based on your preference by changing the following line in 'nzbthrottle.service' 
+```
+ExecStart=/usr/bin/python3 /opt/nzbthrottle/throttle.py
+```
+
+### Running script in Docker ###
+In addition to the above options, the script can be dockerized by building the image with the following command from the project root
+```
+docker build -f ./docker/Dockerfile -t nzbthrottle .
+```
+
+We assume you know how to create a container from the built image
+
+

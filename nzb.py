@@ -41,4 +41,4 @@ class NZB(object):
             else:
                 self._logger.error("Did not get expected response from NZB API: %s",r.text)
         except Exception as e:
-            self._logger.exception("Issue encountered when attempting to request method run from NZBGet")
+            self._logger.exception("Error encountered when requesting method: " + str(method) + " with params: " + str(params))

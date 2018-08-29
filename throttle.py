@@ -10,14 +10,19 @@ from helpers import stream_throttle_helpers as stream_helper
 def start_monitor():
     try:
         lastThrottleState = False
-        last_active_streams = p.get_active_streams()
+        last_active_streams = 0
         while (1):
             logger.info("Requesting active stream count...")
             active_streams = p.get_active_streams()
 
-            if(n.get_current_throttle_status() == False and lastThrottleState == True):
-                logger.debug("Previous state of throttle flag was True but currently not throttled, changing to False!")
-                lastThrottleState = False
+            state = n.get_current_throttle_status()
+            if(state == False and lastThrottleState == True):
+                    logger.debug("Previous state of throttle flag was True but currently not throttled, changing to False!")
+                    lastThrottleState = False
+            elif(state == True and lastThrottleState == False):
+                    logger.debug("Previous state of throttle flag was False but currently we are throttled, changing to True!")
+                    last_active_streams = p.get_active_streams()
+                    lastThrottleState = True
 
             if (active_streams != None):
                 logger.info("Current stream count: %d", active_streams)

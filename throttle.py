@@ -10,7 +10,7 @@ from helpers import stream_throttle_helpers as stream_helper
 def start_monitor():
     try:
         lastThrottleState = False
-        last_active_streams = 0
+        last_active_streams = p.get_active_streams()
         while (1):
             logger.info("Requesting active stream count...")
             active_streams = p.get_active_streams()

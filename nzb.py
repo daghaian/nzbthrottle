@@ -42,13 +42,17 @@ class NZB(object):
 
 
     def throttle_streams(self,active_streams):
-        currRate = 0
-        if(active_streams != 0):
-            currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
-        throttleResponse = json.loads(self.run_method("rate",currRate))
-        if ('result' in throttleResponse and throttleResponse["result"] == True):
-            return True
-        return False
+        try:
+            currRate = 0
+            if(active_streams != 0):
+                currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
+            throttleResponse = json.loads(self.run_method("rate",currRate))
+            if ('result' in throttleResponse and throttleResponse["result"] == True):
+                return True
+            return False
+        except Exception as e:
+            raise e
+
 
     def run_method(self,method,params=None):
         try:
@@ -59,5 +63,7 @@ class NZB(object):
                 return r.text
             else:
                 self._logger.error("Did not get expected response from NZB API: %s",r.text)
+                return None
         except Exception as e:
             self._logger.exception("Error encountered when requesting method: " + str(method) + " with params: " + str(params))
+            raise e

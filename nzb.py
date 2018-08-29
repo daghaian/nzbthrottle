@@ -23,35 +23,29 @@ class NZB(object):
         return self._speedIncrements
 
     def get_current_throttle_status(self):
-        try:
-            self._logger.debug("Grabbing current state of NZBGet")
-            currStatus = json.loads(self.run_method("status"))
-            if(currStatus != None):
-                self._logger.debug("Current status of NZBGet is %s",currStatus)
-                self._logger.debug("Current rate of NZBGet download is %d",currStatus['result']['DownloadLimit'])
-                if(currStatus['result']['DownloadLimit'] == 0):
-                    self._logger.debug("NZB is current NOT throttled, returning False")
-                    return False
-                else:
-                    self._logger.debug("NZB is currently throttled with a speed of %d. Returning true",currStatus['result']['DownloadLimit'])
-                    return True
+        self._logger.debug("Grabbing current state of NZBGet")
+        currStatus = json.loads(self.run_method("status"))
+        if(currStatus != None):
+            self._logger.debug("Current status of NZBGet is %s",currStatus)
+            self._logger.debug("Current rate of NZBGet download is %d",currStatus['result']['DownloadLimit'])
+            if(currStatus['result']['DownloadLimit'] == 0):
+                self._logger.debug("NZB is current NOT throttled, returning False")
+                return False
             else:
-                self._logger.error("Something went wrong when requesting the current status of NZBGet")
-        except Exception as e:
-            raise e
+                self._logger.debug("NZB is currently throttled with a speed of %d. Returning true",currStatus['result']['DownloadLimit'])
+                return True
+        else:
+            self._logger.error("Something went wrong when requesting the current status of NZBGet")
 
 
     def throttle_streams(self,active_streams):
-        try:
-            currRate = 0
-            if(active_streams != 0):
-                currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
-            throttleResponse = json.loads(self.run_method("rate",currRate))
-            if ('result' in throttleResponse and throttleResponse["result"] == True):
-                return True
-            return False
-        except Exception as e:
-            raise e
+        currRate = 0
+        if(active_streams != 0):
+            currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
+        throttleResponse = json.loads(self.run_method("rate",currRate))
+        if ('result' in throttleResponse and throttleResponse["result"] == True):
+            return True
+        return False
 
 
     def run_method(self,method,params=None):
@@ -66,4 +60,3 @@ class NZB(object):
                 return None
         except Exception as e:
             self._logger.exception("Error encountered when requesting method: " + str(method) + " with params: " + str(params))
-            raise e

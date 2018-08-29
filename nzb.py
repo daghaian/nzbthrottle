@@ -22,6 +22,25 @@ class NZB(object):
     def get_speedIncrements(self):
         return self._speedIncrements
 
+    def get_current_throttle_status(self):
+        try:
+            self._logger.debug("Grabbing current state of NZBGet")
+            currStatus = json.loads(self.run_method("status"))
+            if(currStatus != None):
+                self._logger.debug("Current status of NZBGet is %s",currStatus)
+                self._logger.debug("Current rate of NZBGet download is %d",currStatus['result']['DownloadLimit'])
+                if(currStatus['result']['DownloadLimit'] == 0):
+                    self._logger.debug("NZB is current NOT throttled, returning False")
+                    return False
+                else:
+                    self._logger.debug("NZB is currently throttled with a speed of %d. Returning true",currStatus['result']['DownloadLimit'])
+                    return True
+            else:
+                self._logger.error("Something went wrong when requesting the current status of NZBGet")
+        except Exception as e:
+            raise e
+
+
     def throttle_streams(self,active_streams):
         currRate = 0
         if(active_streams != 0):

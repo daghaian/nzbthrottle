@@ -8,38 +8,47 @@ from helpers import stream_throttle_helpers as stream_helper
 
 
 def start_monitor():
-    currThrottled = False
-    last_active_streams = 0
-    while (1):
-        logger.info("Requesting active stream count...")
-        active_streams = p.get_active_streams()
-        if (active_streams != None):
-            logger.info("Current stream count: %d", active_streams)
-            if (currThrottled):
-                if (active_streams == 0):
-                    logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
-                    if(n.throttle_streams(active_streams) == True):
-                        currThrottled = False
-                        last_active_streams = active_streams
-                        logger.info("Throttle lifted successfully")
-                elif(active_streams != last_active_streams):
-                    logger.info("Already throttled, but stream count has changed, adjusting speed")
-                    if (n.throttle_streams(active_streams) == True):
-                        last_active_streams = active_streams
-                        logger.info("Speed throttling adjusted successfully")
-                else:
-                    logger.info("Already throttled with no change. Continuing to monitor.")
-            else:
-                if (active_streams > 0):
-                    logger.info("There are currently active streams. Proceeding to throttle NZB")
-                    if (n.throttle_streams(active_streams) == True):
-                        logger.info("NZB throttled successfully")
-                        currThrottled = True
-                        last_active_streams = active_streams
+    try:
+        lastThrottleState = False
+        last_active_streams = 0
+        while (1):
+            logger.info("Requesting active stream count...")
+            active_streams = p.get_active_streams()
+
+            if(n.get_current_throttle_status() == False and lastThrottleState == True):
+                logger.debug("Previous state of throttle flag was True but currently not throttled, changing to False!")
+                lastThrottleState = False
+
+            if (active_streams != None):
+                logger.info("Current stream count: %d", active_streams)
+                if (lastThrottleState):
+                    if (active_streams == 0):
+                        logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
+                        if(n.throttle_streams(active_streams) == True):
+                            lastThrottleState = False
+                            last_active_streams = active_streams
+                            logger.info("Throttle lifted successfully")
+                    elif(active_streams != last_active_streams):
+                        logger.info("Already throttled, but stream count has changed, adjusting speed")
+                        if (n.throttle_streams(active_streams) == True):
+                            last_active_streams = active_streams
+                            logger.info("Speed throttling adjusted successfully")
                     else:
-                        logger.error("Something went wrong when attemping to throttle NZB")
-        logger.info("Sleeping for %d seconds before checking again", p.get_interval())
-        time.sleep(p.get_interval())
+                        logger.info("Already throttled with no change. Continuing to monitor.")
+                else:
+                    if (active_streams > 0):
+                        logger.info("There are currently active streams. Proceeding to throttle NZB")
+                        if (n.throttle_streams(active_streams) == True):
+                            logger.info("NZB throttled successfully")
+                            lastThrottleState = True
+                            last_active_streams = active_streams
+                        else:
+                            logger.error("Something went wrong when attemping to throttle NZB")
+            logger.info("Sleeping for %d seconds before checking again", p.get_interval())
+            time.sleep(p.get_interval())
+    except Exception as e:
+        logger.error("Start monitor encountered exception. Trying again in 60 seconds")
+        time.sleep(60)
 
 #=======================================================#
 #                       INIT                            #
@@ -73,5 +82,5 @@ logger.addHandler(ch)
 p = plex.PlexServer()
 n = nzb.NZB()
 
-
-start_monitor()
+while(1):
+    start_monitor()

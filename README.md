@@ -68,12 +68,7 @@ If you do not wish to run the script manually, the module can be daemonized by c
 ExecStart=/usr/bin/python3 /opt/nzbthrottle/throttle.py
 ```
 
-### Running script in Docker ###
-In addition to the above options, the script can be dockerized by building the image with the following command from the project root
+### Running script in a Docker Container ###
 ```
-docker build -f ./docker/Dockerfile -t nzbthrottle .
+docker run --name nzbthrottle -d -v /PATH/TO/CONFIG.json:/nzbthrottle/config.json daghaian/nzbthrottle
 ```
-
-We assume you know how to create a container from the built image
-
-

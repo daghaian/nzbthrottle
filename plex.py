@@ -25,10 +25,11 @@ class PlexServer(object):
 
     def get_active_streams(self):
         try:
+            active_streams = 0
             r = requests.get(self._url + "/status/sessions",headers={'X-Plex-Token':self._token})
             if(r.status_code == 200):
                 root = ET.fromstring(r.text)
-                return int(root.attrib['size'])
+                return len([video.attrib for video in root.iter('Video') for video in video.iter('Player') if video.attrib['state'] == 'playing'])
             else:
                 self._logger.error("Did not get expected response from Plex API: %s",r.text)
         except Exception as e:

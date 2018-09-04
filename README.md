@@ -57,7 +57,7 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 
 ```speeds``` - Define speed to throttle to (in kB/s) based on number of active streams
 
-```max_speed``` - Define maximum speed when the throttle is lifted (in kB/s)
+```max_speed``` - Define maximum speed when the throttle is lifted (in kB/s). Set to 0 if you wish to not use a limit
 ## Usage
 
 ### Running script manually ###

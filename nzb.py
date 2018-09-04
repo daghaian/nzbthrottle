@@ -16,9 +16,16 @@ class NZB(object):
                 self._username = cfg['nzbget']['username']
                 self._password = cfg['nzbget']['password']
                 self._speedIncrements = cfg['nzbget']['speeds']
+                self._maxSpeed = cfg['nzbget']['max_speed']
         except Exception as e:
             self._logger.exception("Problem encountered when creating NZB object")
             sys.exit(1)
+    def get_maxSpeed(self):
+        return self._maxSpeed
+    def set_start_speed(self):
+        self._logger.info("Setting initial speed for NZB as %d",self._maxSpeed if self._maxSpeed else 0)
+        self.throttle_streams(0)
+
     def get_speedIncrements(self):
         return self._speedIncrements
 
@@ -28,7 +35,7 @@ class NZB(object):
         if(currStatus != None):
             self._logger.debug("Current status of NZBGet is %s",currStatus)
             self._logger.debug("Current rate of NZBGet download is %d",currStatus['result']['DownloadLimit'])
-            if(currStatus['result']['DownloadLimit'] == 0):
+            if(currStatus['result']['DownloadLimit'] == 0 or (self._maxSpeed and currStatus['result']['DownloadLimit'] >= (self._maxSpeed * 1000))):
                 self._logger.debug("NZB is current NOT throttled, returning False")
                 return False
             else:
@@ -39,7 +46,7 @@ class NZB(object):
 
 
     def throttle_streams(self,active_streams):
-        currRate = 0
+        currRate = 0 if not self._maxSpeed else self._maxSpeed
         if(active_streams != 0):
             currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
         throttleResponse = json.loads(self.run_method("rate",currRate))

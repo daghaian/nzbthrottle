@@ -11,10 +11,11 @@ def start_monitor():
     try:
         lastThrottleState = False
         last_active_streams = 0
+        #Initially set speed of nzbget to unthrottle or the user defined maxSpeed
+        n.set_start_speed()
         while (1):
             logger.info("Requesting active stream count...")
             active_streams = p.get_active_streams()
-
             state = n.get_current_throttle_status()
             if(state == False and lastThrottleState == True):
                     logger.debug("Previous state of throttle flag was True but currently not throttled, changing to False!")

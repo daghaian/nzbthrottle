@@ -13,4 +13,4 @@ RUN \
   pip install --no-cache-dir --upgrade pip setuptools && \
   pip install --no-cache-dir --upgrade -r /nzbthrottle/requirements.txt
 
-CMD [ "python", "./throttle.py" ]
+ENTRYPOINT [ "python", "./throttle.py" ]

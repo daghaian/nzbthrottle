@@ -50,6 +50,11 @@ def start_monitor():
                             last_active_streams = active_streams
                         else:
                             logger.error("Something went wrong when attemping to throttle NZB")
+                    else:
+                        logger.info("No active streams and not previously throttled. Ensuring correct unthrottle speed is set")
+                        if(n.throttle_streams(0) == True):
+                            logger.info("Unthrottled speed set correctly")
+   
             logger.info("Sleeping for %d seconds before checking again", p.get_interval())
             time.sleep(p.get_interval())
     except Exception as e:

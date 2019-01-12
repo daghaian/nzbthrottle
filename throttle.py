@@ -50,6 +50,9 @@ def start_monitor():
                             last_active_streams = active_streams
                         else:
                             logger.error("Something went wrong when attemping to throttle NZB")
+                    else:
+                        # Re-apply max throttle in the event that throttle state was lost and no users are streaming
+                        n.throttle_streams(0)
             logger.info("Sleeping for %d seconds before checking again", p.get_interval())
             time.sleep(p.get_interval())
     except Exception as e:

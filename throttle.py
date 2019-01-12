@@ -1,5 +1,6 @@
 import plex
 import nzb
+import notification
 import json
 import time
 import argparse
@@ -31,12 +32,14 @@ def start_monitor():
                     if (active_streams == 0):
                         logger.info("Streams are 0 and we are currently throttled. Lifting the limit")
                         if(n.throttle_streams(active_streams) == True):
+                            x.notifiy("Streams are 0 and we are currently throttled. Lifting the limit")
                             lastThrottleState = False
                             last_active_streams = active_streams
                             logger.info("Throttle lifted successfully")
                     elif(active_streams != last_active_streams):
                         logger.info("Already throttled, but stream count has changed, adjusting speed")
                         if (n.throttle_streams(active_streams) == True):
+
                             last_active_streams = active_streams
                             logger.info("Speed throttling adjusted successfully")
                     else:
@@ -45,6 +48,7 @@ def start_monitor():
                     if (active_streams > 0):
                         logger.info("There are currently active streams. Proceeding to throttle NZB")
                         if (n.throttle_streams(active_streams) == True):
+
                             logger.info("NZB throttled successfully")
                             lastThrottleState = True
                             last_active_streams = active_streams
@@ -53,6 +57,7 @@ def start_monitor():
                     else:
                         logger.info("No active streams and not previously throttled. Ensuring correct unthrottle speed is set")
                         if(n.throttle_streams(0) == True):
+                            x.notifiy("No active streams and not previously throttled. Ensuring correct unthrottle speed is set")
                             logger.info("Unthrottled speed set correctly")
    
             logger.info("Sleeping for %d seconds before checking again", p.get_interval())
@@ -90,7 +95,11 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
+# initialize notification client
+x = notification.NotificationClient()
+# initialize plex server
 p = plex.PlexServer()
+# initialize NZB server
 n = nzb.NZB()
 
 while(1):

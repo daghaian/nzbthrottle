@@ -73,3 +73,8 @@ ExecStart=/usr/bin/python3 /opt/nzbthrottle/throttle.py
 ```
 docker run --name nzbthrottle -d -v /PATH/TO/CONFIG.json:/nzbthrottle/config.json daghaian/nzbthrottle
 ```
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/daghaian/nzbthrottle/badge.svg?style=beer-square)](https://beerpay.io/daghaian/nzbthrottle)  [![Beerpay](https://beerpay.io/daghaian/nzbthrottle/make-wish.svg?style=flat-square)](https://beerpay.io/daghaian/nzbthrottle?focus=wish)

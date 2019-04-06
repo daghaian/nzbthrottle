@@ -11,24 +11,18 @@ class NotificationClient(object):
                 self._logger.debug("Loading Notification Data from config.json")
                 cfg = json.load(w)
                 self._logger.debug("Notification Data loaded successfully" + str(cfg))
-                asset = apprise.AppriseAsset(
-
+                self._notifier = apprise.Apprise(asset=apprise.AppriseAsset(
                     image_url_mask="https://avatars3.githubusercontent.com/u/3368377?s=200&v=4",
-                    default_extension=".jpeg"
-                )
-                self._notifier = apprise.Apprise(asset=asset)
+                    default_extension=".jpeg"))
                 for k,v in cfg['notifications'].items():
                     if(v['enabled'] == True):
                         self._notifier.add(v['url'])
-
-
         except Exception as e:
             self._logger.exception("Problem encountered when creating Notification object")
             sys.exit(1)
 
-    def notifiy(self,message):
+    def notify(self,message):
         self._notifier.notify(
             title='NZBThrottle Notification',
-            body=message,
-
+            body=message
         )

@@ -37,8 +37,8 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
     "max_speed":80000
   },"notifications": {
     "Discord": {
-      "enabled": true,
-      "url": "discord://496862184794488852/bXZ-YHOAngvF85cTasKVyzT5BwxpSMZiZPKcSA64ppRzHcx61UHbIyoubM7kQ8zNnlyn"
+      "enabled": false ,
+      "url": "discord://webhook_id/webhook_token"
     },
     "Rocket.Chat": {
       "enabled": false,

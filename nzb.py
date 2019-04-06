@@ -1,5 +1,6 @@
 import logging
 import requests
+from urllib.parse import urlparse
 import json
 import sys
 from helpers import stream_throttle_helpers as stream_helper
@@ -51,14 +52,21 @@ class NZB(object):
             currRate = stream_helper.find_nearest(self._speedIncrements,active_streams)
         throttleResponse = json.loads(self.run_method("rate",currRate))
         if ('result' in throttleResponse and throttleResponse["result"] == True):
-            return True
-        return False
+            return currRate
+        return -1
 
+
+    def _form_request_url(self):
+        try:
+            url = urlparse(self._url)
+            return "{scheme}://{username}:{password}@{netloc}/jsonrpc".format(scheme=url.scheme,username=self._username,password=requests.compat.quote_plus(self._password),netloc=url.netloc)
+        except Exception as e:
+            self._logger.exception("Error encountered when formatting provided url for nzbget requests")
 
     def run_method(self,method,params=None):
         try:
             self._logger.debug("Requesting method: " + str(method) + " with params: " + str(params))
-            r = requests.post(self._url + '/{username}:{password}/jsonrpc'.format(username=self._username,password=self._password),headers={'Content-type':'application/json'},json={"method":method,"params": params if not None else []})
+            r = requests.post(self._form_request_url(),headers={'Content-type':'application/json'},json={"method":method,"params": params if not None else []})
             if(r.status_code == 200):
                 self._logger.debug("Response from NZBGet: " + str(r.text))
                 return r.text

@@ -21,7 +21,7 @@
   },
   "notifications": {
     "Discord": {
-      "enabled": true,
+      "enabled": false,
       "url": "discord://webhook_id/webhook_token"
     },
     "Rocket.Chat": {

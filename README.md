@@ -35,6 +35,35 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
       "5":1000
     },
     "max_speed":80000
+  },"notifications": {
+    "Discord": {
+      "enabled": true,
+      "url": "discord://496862184794488852/bXZ-YHOAngvF85cTasKVyzT5BwxpSMZiZPKcSA64ppRzHcx61UHbIyoubM7kQ8zNnlyn"
+    },
+    "Rocket.Chat": {
+      "enabled": false,
+      "url": "rocket://user:password@hostname/RoomID/Channel"
+    },
+    "Slack": {
+      "enabled": false,
+      "url": "slack://TokenA/TokenB/TokenC/Channel"
+    },
+    "Telegram": {
+      "enabled": false,
+      "url": "tgram://bottoken/ChatID"
+    },
+    "IFTTT": {
+      "enabled": false,
+      "url": "ifttt://webhooksID/EventToTrigger"
+    },
+    "PushBullet":{
+      "enabled": false,
+      "url": "pbul://accesstoken"
+    },
+    "Growl": {
+      "enabled": false,
+      "url": "growl://hostname"
+    }
   }
 }
 ```
@@ -58,6 +87,13 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 ```speeds``` - Define speed to throttle to (in kB/s) based on number of active streams
 
 ```max_speed``` - Define maximum speed when the throttle is lifted (in kB/s). Set to 0 if you wish to not use a limit
+
+***Notifications***
+
+```enabled``` - Whether or not you wish to enable notifications via the selected service
+
+```url``` - URL for the service you wish to enable (see https://github.com/caronc/apprise for formatting options of the URL)
+
 ## Usage
 
 ### Running script manually ###

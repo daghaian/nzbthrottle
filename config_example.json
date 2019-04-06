@@ -18,5 +18,35 @@
       "5":1000
     },
     "max_speed":80000
+  },
+  "notifications": {
+    "Discord": {
+      "enabled": false,
+      "url": "discord://webhook_id/webhook_token"
+    },
+    "Rocket.Chat": {
+      "enabled": false,
+      "url": "rocket://user:password@hostname/RoomID/Channel"
+    },
+    "Slack": {
+      "enabled": false,
+      "url": "slack://TokenA/TokenB/TokenC/Channel"
+    },
+    "Telegram": {
+      "enabled": false,
+      "url": "tgram://bottoken/ChatID"
+    },
+    "IFTTT": {
+      "enabled": false,
+      "url": "ifttt://webhooksID/EventToTrigger"
+    },
+    "PushBullet":{
+      "enabled": false,
+      "url": "pbul://accesstoken"
+    },
+    "Growl": {
+      "enabled": false,
+      "url": "growl://hostname"
+    }
   }
 }

@@ -8,6 +8,7 @@ WORKDIR /nzbthrottle
 RUN \
   echo "** BRANCH: ${BRANCH} COMMIT: ${COMMIT} **" && \
   echo "** Upgrade all packages **" && \
+  apk add -y gcc libffi-dev musl-dev linux-headers && \
   apk --no-cache -U upgrade && \
   echo "** Install PIP dependencies **" && \
   pip install --no-cache-dir --upgrade pip setuptools && \

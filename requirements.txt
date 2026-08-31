@@ -1,2 +1,2 @@
-requests < 3.0.0
-apprise == 0.9.5.1
+requests >= 2.32.0, < 3.0.0
+apprise >= 1.9.0, < 2.0.0

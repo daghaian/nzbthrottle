@@ -1,4 +1,4 @@
-FROM python:3.6-alpine3.7
+FROM python:3.12-alpine
 #Copy all project files
 COPY . /nzbthrottle
 
@@ -6,9 +6,7 @@ COPY . /nzbthrottle
 WORKDIR /nzbthrottle
 
 RUN \
-  echo "** BRANCH: ${BRANCH} COMMIT: ${COMMIT} **" && \
   echo "** Upgrade all packages **" && \
-  apk add -y gcc libffi-dev musl-dev linux-headers && \
   apk --no-cache -U upgrade && \
   echo "** Install PIP dependencies **" && \
   pip install --no-cache-dir --upgrade pip setuptools && \

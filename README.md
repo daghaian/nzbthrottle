@@ -6,7 +6,7 @@ Nzbthrottle was designed in order to dynamically control the bandwidth allocatio
 
 ## Installation
 
-*Note: Must have Python 3.5 or higher*
+*Note: Must have Python 3.10 or higher*
 
 1. Run ```pip install -r requirements.txt``` from within the project root
 2. Copy ```config_example.json``` and name the new file ```config.json```
